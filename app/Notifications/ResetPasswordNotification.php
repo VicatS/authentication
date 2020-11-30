@@ -14,11 +14,11 @@ class ResetPasswordNotification extends Notification
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param $token
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -41,9 +41,13 @@ class ResetPasswordNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->subject('Solicitud de reestablecimiento de contrasenia')
+                    ->greeting('Hola', $notifiable->name)
+                    ->line('Recibes este email porque se solicito un reestablecimiento de contrasenia para tu cuenta.')
+//                    ->line('The introduction to the notification.')
+                    ->action('Reestablecer contrasenia', url(config('app.url').route('password.reset', $this->token, false)))
+                    ->line('Si no realizaste esta peticion, puedes ignorar este correo y nada habra cambiado.')
+                    ->salutation('Saludos!');
     }
 
     /**
